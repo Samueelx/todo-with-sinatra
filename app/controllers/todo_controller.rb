@@ -1,6 +1,13 @@
 class TodoController < Sinatra::Base
+    set :views, './app/views'
+
     get '/hello' do
         "Our first controller!"
+    end
+
+    get '/views/todos' do
+        @todos = Todo.all
+        erb :todos
     end
 
     post '/todos/create' do
