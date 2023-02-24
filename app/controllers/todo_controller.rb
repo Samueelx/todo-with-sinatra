@@ -27,5 +27,31 @@ class TodoController < Sinatra::Base
         
     end
 
-    
+    get '/todos' do
+        todos = Todo.all
+        [200, todos.to_json]
+    end
+
+    put '/todos/update/:id' do
+        begin
+            data = JSON.parse(request.body.read)
+            todo_id = params['id'].to_i
+            todo = Todo.find(todo_id)
+            todo.update(data)
+            [201, {message: "Todo updated successfully"}.to_json]
+        rescue => exception
+            [422, {error: exception.message}.to_json]    
+        end
+    end
+
+    delete '/todos/destroy/:id' do
+        begin
+            todo_id = params['id'].to_i
+            todo = Todo.find(todo_id)
+            todo.destroy()
+            [201, {message: "todo deleted successfully"}.to_json]
+        rescue => exception
+            [422, {error: exception.message}.to_json]
+        end
+    end
 end
